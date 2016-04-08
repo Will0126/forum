@@ -14,8 +14,8 @@
                 <c:when test="${not empty sessionScope.curr_user}">
                     <li>
                         <a href="#">
-                            <%--域名+key+裁剪--%>
-                            <img src="http://7xsqhw.com1.z0.glb.clouddn.com/${sessionScope.curr_user.avatar}?imageView2/1/w/20/h/20" class="img-circle" alt="">
+                            <%--(域名+key)+裁剪--%>
+                            <img src="${sessionScope.curr_user.avatar}?imageView2/1/w/20/h/20" class="img-circle" alt="">
                         </a>
                     </li>
                     <li>

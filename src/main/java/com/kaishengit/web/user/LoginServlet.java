@@ -36,14 +36,13 @@ public class LoginServlet extends BaseServlet{
 
             //String ip = req.getRemoteAddr();//获取登录用户的ip地址
             UserService userService = new UserService();
-            User user = userService.login(username,password,getRemoteIp(req));
-            if(user == null){
-                //user返回为空
-                result.put("state","error");
-                result.put("message","账号或密码输入错误");
-            } else {
+            try {
+                User user = userService.login(username, password, getRemoteIp(req));
                 req.getSession().setAttribute("curr_user",user);
                 result.put("state","success");
+            } catch (Exception e){
+                result.put("state","error");
+                result.put("message",e.getMessage());
             }
         }
         //返回一个Json

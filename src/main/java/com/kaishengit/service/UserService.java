@@ -78,13 +78,23 @@ public class UserService {
         if(user != null && user.getPassword().equals(DigestUtils.md5Hex(password + ConfigProp.get("user.password.salt")))){
             //登录成功
             //设置登录时间和登录ip属性
-            user.setLoginip(ip);
-            user.setLogintime(DateTime.now().toString("yyyy-MM-dd HH:mm:ss"));
-            userDao.updata(user);
-            return  user;
-        }
-        return null;
+            if(user.getState().equals(user.USER_STATE_NORMAL)){
+                //帐号正常
+                user.setLoginip(ip);
+                user.setLogintime(DateTime.now().toString("yyyy-MM-dd HH:mm:ss"));
+                userDao.updata(user);
+                return  user;
+            } else if(user.getState().equals(user.USER_STATE_DISABLE)){
+                //帐号禁用
+                throw new ServiceException("该帐号已禁用");
+            } else {
+                //帐号未激活
+                throw new ServiceException("该帐号未激活");
+            }
 
+        } else {
+            throw new ServiceException("账号或密码错误");
+        }
     }
 
 

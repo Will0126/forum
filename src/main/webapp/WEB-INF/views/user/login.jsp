@@ -35,7 +35,8 @@
             <div class="control-group">
                 <label class="control-label">账号</label>
                 <div class="controls">
-                    <input type="text" name="username" id="username">
+                    <input type="text" name="username" id="username" autocomplete="off">
+                    <%--autocomplete="off"帐号框不能记忆--%>
                 </div>
             </div>
             <div class="control-group">
@@ -102,7 +103,6 @@
                         if(json.state == "error") {
                             $("#errorMsg").text(json.message);
                         } else {
-                            //非空
                             window.location.href = "/index.do";
                         }
 
