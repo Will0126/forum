@@ -12,7 +12,6 @@ import java.io.IOException;
 @WebServlet("/validate/username.do")
 public class ValidateUsernameServlet extends BaseServlet {
 
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //为解决get提交中文

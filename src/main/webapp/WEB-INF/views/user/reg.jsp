@@ -141,7 +141,7 @@
                 }
             },
             //当以上验证都通过并且提交时会触发
-            submitHandler: function (form) {
+            submitHandler:function(form) {
                //form为整个表单元素
                 //Ajax提交 参数为表单输入的帐号密码邮箱
                 //$(form).serialize() 表单元素.serialize(),可以自动拼好表单的键值

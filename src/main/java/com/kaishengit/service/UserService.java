@@ -30,7 +30,7 @@ public class UserService {
 
         User user = new User();
         user.setUsername(username);
-        user.setPassword(DigestUtils.md5Hex(password+ConfigProp.get("user.password.salt")));
+        user.setPassword(DigestUtils.md5Hex(password + ConfigProp.get("user.password.salt")));
         user.setEmail(email);
         //时间生成辅助类库
         user.setCreatetime(DateTime.now().toString("yyyy-MM-dd HH:mm:ss"));

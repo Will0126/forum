@@ -12,7 +12,7 @@ public class ServiceException extends RuntimeException {
     public ServiceException(String massage){
         super(massage);
     }
-    public ServiceException(Throwable th, String massage) {
+    public ServiceException(String massage,Throwable th) {
         super(massage,th);
     }
 

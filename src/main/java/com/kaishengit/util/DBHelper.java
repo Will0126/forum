@@ -20,7 +20,7 @@ public class DBHelper {
             queryRunner.update(sql, params);
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new DataAccessException(e,"SQL Update Exception"+sql);
+            throw new DataAccessException(e,"SQL Update Exception" + sql);
         }
     }
 
@@ -33,7 +33,8 @@ public class DBHelper {
            return queryRunner.query(sql,handler,params);
        } catch (SQLException e) {
            e.printStackTrace();
-           throw new DataAccessException(e,"SQL Update Exception"+sql);
+           throw new DataAccessException(e,"SQL query Exception" + sql);
        }
    }
+
 }

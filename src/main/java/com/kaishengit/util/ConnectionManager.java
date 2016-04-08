@@ -18,9 +18,9 @@ public class ConnectionManager {
     static {
         //driver、url、username、password数据库连接参数设置
         basicDataSource.setDriverClassName(ConfigProp.get("jdbc.driver"));
-        basicDataSource.setUrl("jdbc.url");
-        basicDataSource.setUsername("jdbc.username");
-        basicDataSource.setPassword("jdbc.password");
+        basicDataSource.setUrl(ConfigProp.get("jdbc.url"));
+        basicDataSource.setUsername(ConfigProp.get("jdbc.username"));
+        basicDataSource.setPassword(ConfigProp.get("jdbc.password"));
 
         //连接池参数设置
         basicDataSource.setInitialSize(5);//初始化时数据库连接池数量

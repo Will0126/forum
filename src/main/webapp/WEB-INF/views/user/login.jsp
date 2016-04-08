@@ -17,17 +17,22 @@
             <span class="title"><i class="fa fa-fire"></i> 登录</span>
         </div>
 
-        <form action="" class="form-horizontal">
+        <form action="" class="form-horizontal" id="loginForm">
+            <div class="control-group">
+                <div class="controls">
+                    <span id="errorMsg"></span>
+                </div>
+            </div>
             <div class="control-group">
                 <label class="control-label">账号</label>
                 <div class="controls">
-                    <input type="text">
+                    <input type="text" name="username" id="username">
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label">密码</label>
                 <div class="controls">
-                    <input type="text">
+                    <input type="password" name="password" id="password">
                 </div>
             </div>
             <div class="control-group">
@@ -38,7 +43,7 @@
             </div>
 
             <div class="form-actions">
-                <button class="btn btn-primary">登录</button>
+                <button type="button" class="btn btn-primary" id="loginBtn">登录</button>
                 <a class="pull-right" href="/reg.do">注册账号</a>
             </div>
 
@@ -47,5 +52,67 @@
     <!--box end-->
 </div>
 <!--container end-->
+
+<script src="/static/js/jquery-1.11.3.min.js"></script>
+<script src="/static/js/jquery.validate.min.js"></script>
+<script>
+    $(function(){
+        $("#loginBtn").click(function(){
+            $("#loginForm").submit();
+        });
+        $("#loginForm").validate({
+           errorClass:'text-error',
+           errorElement:'span',
+           rules:{
+               username:{
+                   required:true
+               },
+               password:{
+                   required:true
+               }
+           },
+           message:{
+               username:{
+                   required:"请输入帐号"
+               },
+               password:{
+                   required:"请输入密码"
+               }
+           },
+           submitHandler:function(form){
+               var $btn = $("#loginBtn");
+               $.ajax({
+                   url:"/login.do",
+                   type:"post",
+                   data:$(form).serialize(),
+                   beforeSend:function(){
+//                       $btn.attr("class","fa fa-modx fa-spin");
+                         $btn.text("登录中。。。").attr("disabled","disabled");
+                   },
+                   success:function(){
+                        
+                   },
+                   error:function(){
+                       $("#errorMsg").text("账号或密码输入错误，请重新输入。").attr("class","text-error");
+                   },
+                   complete:function(){
+
+                       $btn.text("登录").removeAttr("disabled");
+
+                       //当输入错误，提醒帐号密码错误，当点击帐号和密码框，清空提示
+                       $("#username").click(function(){
+                           $("#errorMsg").text("").removeAttr("class","text-error");
+                       });
+                       $("#password").click(function(){
+                           $("#errorMsg").text("").removeAttr("class","text-error");
+                       });
+                   }
+               })
+           }
+       });
+
+
+    })
+</script>
 </body>
 </html>

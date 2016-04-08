@@ -6,9 +6,8 @@ import org.apache.commons.dbutils.handlers.BeanHandler;
 
 public class UserDao {
     public void save(User user) {
-        String sql = "insert into w_user(username,password,email,avatar,createtime) values(?,?,?,?,?,?)";
+        String sql = "insert into w_user(username,password,email,avatar,createtime,state) values(?,?,?,?,?,?)";
         DBHelper.update(sql,user.getUsername(),user.getPassword(),user.getEmail(),user.getAvatar(),user.getCreatetime(),user.getState());
-
     }
 
     public User findByUsername(String username) {
