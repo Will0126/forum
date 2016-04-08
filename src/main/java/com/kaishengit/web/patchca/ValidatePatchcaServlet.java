@@ -28,7 +28,4 @@ public class ValidatePatchcaServlet extends BaseServlet {
         rendText(response,result);
 
     }
-
-
-
 }

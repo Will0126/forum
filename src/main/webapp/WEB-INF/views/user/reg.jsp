@@ -75,6 +75,7 @@
             $("#regForm").submit();
         });
 
+        //点击更换验证码
         $("#change").click(function() {
             $("#patchca").attr("src","/patchca.png?XXX=" + new Date().getTime().toString());
         });
