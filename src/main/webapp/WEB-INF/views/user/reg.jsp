@@ -43,6 +43,19 @@
                     <input type="text" name="email">
                 </div>
             </div>
+            <div class="control-group">
+                <label class="control-label">验证码</label>
+                <div class="controls">
+                    <input type="text" name="code">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label"></label>
+                    <div class="controls">
+                        <a href="javascript:;" id="change"><img src="/patchca.png" id="patchca"></a>
+
+                    </div>
+            </div>
             <div class="form-actions">
                 <button type="button" id="regBtn" class="btn btn-primary">注册</button>
                 <span id="regMsg" class="hide">注册成功，<span class="sec">3</span>秒后自动跳转到登录页面</span>
@@ -62,6 +75,9 @@
             $("#regForm").submit();
         });
 
+        $("#change").click(function() {
+            $("#patchca").attr("src","/patchca.png?XXX=" + new Date().getTime().toString());
+        });
 
         $("#regForm").validate({
             //表单验证配置
@@ -75,8 +91,9 @@
                     required: true,//必填项
                     minlength: 3,//长度最少3字符
                     maxlength: 10,//长度最多10字符
-                    remote:"/validate/username.do"//当失去焦点，以get形式，将表单值get到设置路径，进行远程验证
-                                    //当返回值为true时能用，false不能
+                    remote:"/validate/username.do"
+                    //当失去焦点，以get形式，将表单值get到设置路径，进行远程验证
+                    //当返回值为true时能用，false不能
                 },
                 password: {
                     required: true,//必填项
@@ -90,6 +107,10 @@
                     required: true,//必填项
                     email: true,//必须为邮箱格式
                     remote:"/validate/email.do"
+                },
+                code:{
+                    required:true,
+                    remote:"/validate/patchca.do"
                 }
             },
             //消息
@@ -112,6 +133,10 @@
                     required: "请输入邮箱",
                     email: "邮箱格式不正确，请重新输入",
                     remote:"该邮箱已被注册，请重登录"
+                },
+                code:{
+                    required:"请输入验证码",
+                    remote:"验证码输入错误，请重新输入"
                 }
             },
             //当以上验证都通过并且提交时会触发
