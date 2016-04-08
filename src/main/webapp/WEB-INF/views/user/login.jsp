@@ -17,6 +17,12 @@
             <span class="title"><i class="fa fa-fire"></i> 登录</span>
         </div>
 
+        <c:choose>
+            <c:when test="${param.state == '1002'}">
+                <div class="alert alert-sucess">您已安全退出</div>
+            </c:when>
+        </c:choose>
+
         <form action="" class="form-horizontal" id="loginForm">
             <div class="control-group">
                 <div class="controls">
@@ -86,11 +92,17 @@
                    type:"post",
                    data:$(form).serialize(),
                    beforeSend:function(){
-//                       $btn.attr("class","fa fa-modx fa-spin");
+                       //$btn.attr("class","fa fa-modx fa-spin");
                          $btn.text("登录中。。。").attr("disabled","disabled");
                    },
-                   success:function(){
-                        
+                   success:function(json){
+                        if(json.state == "error") {
+                            $("#errorMsg").text("账号或密码输入错误，请重新输入。");
+                        } else {
+                            //非空
+                            window.location.href = "/index.do";
+                        }
+
                    },
                    error:function(){
                        $("#errorMsg").text("账号或密码输入错误，请重新输入。").attr("class","text-error");

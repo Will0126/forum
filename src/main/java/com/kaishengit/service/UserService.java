@@ -38,6 +38,7 @@ public class UserService {
         user.setState(user.USER_STATE_NORMAL);
 
         userDao.save(user);
+
     }
 
     /**
@@ -56,5 +57,25 @@ public class UserService {
      */
     public User findByEmail(String email) {
         return userDao.findByEmail(email);
+    }
+
+    /**
+     *帐号登录
+     * @param username
+     * @param password
+     * @return
+     */
+    public User login(String username, String password, String ip) {
+        User user = findByUsername(username);
+        if(user != null && user.getPassword().equals(DigestUtils.md5Hex(password + ConfigProp.get("user.password.salt")))){
+            //登录成功
+            //设置登录时间和登录ip属性
+            user.setLoginip(ip);
+            user.setLogintime(DateTime.now().toString("yyyy-MM-dd HH:mm:ss"));
+            userDao.updata(user);
+            return  user;
+        }
+        return null;
+
     }
 }
