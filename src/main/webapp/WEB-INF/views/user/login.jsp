@@ -19,7 +19,10 @@
 
         <c:choose>
             <c:when test="${param.state == '1002'}">
-                <div class="alert alert-sucess">您已安全退出</div>
+                <div class="alert alert-success">您已安全退出</div>
+            </c:when>
+            <c:when test="${param.state == '1003'}">
+                <div class="alert alert-success">密码设置成功，请重新登录</div>
             </c:when>
         </c:choose>
 
@@ -44,7 +47,7 @@
             <div class="control-group">
                 <label class="control-label"></label>
                 <div class="controls">
-                    <a href="foundPassword.html">忘记密码</a>
+                    <a href="/forget/password.do">忘记密码</a>
                 </div>
             </div>
 
@@ -97,7 +100,7 @@
                    },
                    success:function(json){
                         if(json.state == "error") {
-                            $("#errorMsg").text("账号或密码输入错误，请重新输入。");
+                            $("#errorMsg").text(json.message);
                         } else {
                             //非空
                             window.location.href = "/index.do";

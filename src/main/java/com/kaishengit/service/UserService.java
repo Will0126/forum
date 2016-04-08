@@ -1,16 +1,23 @@
 package com.kaishengit.service;
 
+import com.kaishengit.dao.ForgetPasswordDao;
 import com.kaishengit.dao.UserDao;
+import com.kaishengit.entity.ForgetPassword;
 import com.kaishengit.entity.User;
 import com.kaishengit.exception.ServiceException;
 import com.kaishengit.util.ConfigProp;
+import com.kaishengit.util.EmailUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import java.util.UUID;
 
 public class UserService {
 
     private UserDao userDao = new UserDao();
-
+    private ForgetPasswordDao forgetPasswordDao = new ForgetPasswordDao();
     /**
      *新增用户
      * @param username
@@ -41,12 +48,13 @@ public class UserService {
 
     }
 
+
+
     /**
      * 通过username查找用户
      * @param username
      */
     public User findByUsername(String username) {
-
         return userDao.findByUsername(username);
     }
 
@@ -77,5 +85,83 @@ public class UserService {
         }
         return null;
 
+    }
+
+
+    /**
+     * 找回密码功能-----通过帐号，向帐号对应的邮箱发送修改密码邮件
+     * @param username
+     */
+    public void forgetPassword(String username) {
+        User user = findByUsername(username);
+        if(user != null){
+            String token = UUID.randomUUID().toString();
+            String email = user.getEmail();
+            String url = "http://localhost/forget/callback.do?token="+token;
+            //发送邮件
+            String title = "凯盛论坛-找回密码";
+            String msg = user.getUsername() + ":<br>\n" +
+                    "点击该链接由凯盛论坛系统发出，点击< href='"+url+"'>链接</a>进行设置新密码，该链接30分钟内有效。<br>\n" +
+                    url + "请勿回复";
+
+
+            ForgetPassword forgetPassword = new ForgetPassword();
+            forgetPassword.setToken(token);
+            forgetPassword.setUid(user.getId());
+            forgetPassword.setCreatetime(DateTime.now().toString("yyyy-MM-dd HH:mm:ss"));
+
+            forgetPasswordDao.save(forgetPassword);
+
+            EmailUtil.sendHtmlEmail(title,msg,email);
+        }
+
+    }
+
+
+    /**
+     * 验证token是否有效
+     * @param token
+     */
+    public Integer validateForgetPasswordToken(String token) {
+        //验证token
+        ForgetPassword forgetPassword = forgetPasswordDao.findByToken(token);
+        if(forgetPassword == null){
+            throw new ServiceException("该链接无效");
+        } else {
+            //判断是否在30分钟 创建时间+30分钟 > now 有效
+            String creatime = forgetPassword.getCreatetime();
+            //将String 转化为 DateTime类
+            DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+            DateTime dateTime = formatter.parseDateTime(creatime);
+            //增加30
+            dateTime = dateTime.plusMonths(30);
+
+            if(dateTime.isAfterNow()){
+                //在当前时间之后,有效
+                return forgetPassword.getUid();
+            } else {
+                //尝试做删除
+                forgetPasswordDao.deleteForgetPassword(token);
+                throw new ServiceException("该链接已失效");
+            }
+        }
+
+    }
+
+    public void forgetPasswordSetNewPassword(String password, String token) {
+        ForgetPassword forgetPassword = forgetPasswordDao.findByToken(token);
+        if(forgetPassword == null) {
+            throw new ServiceException("token无效");
+        } else {
+            Integer uid = forgetPassword.getUid();
+            User user = userDao.findByUid(uid);
+            //修改用户密码
+            user.setPassword(DigestUtils.md5Hex(password + ConfigProp.get("user.password.salt")));
+             userDao.updata(user);
+
+            //修改完成，删除找回密码记录
+            //这里使用token删除，没使用uid删除
+            forgetPasswordDao.deleteForgetPassword(token);
+        }
     }
 }

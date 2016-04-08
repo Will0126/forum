@@ -24,4 +24,9 @@ public class UserDao {
         String sql = "update w_user set password = ?,email = ?,avatar = ?, loginip = ?, logintime = ?,state = ? where id = ?";
         DBHelper.update(sql,user.getPassword(),user.getEmail(),user.getAvatar(),user.getLoginip(),user.getLogintime(),user.getState(),user.getId());
     }
+
+    public User findByUid(Integer uid) {
+        String sql = "select * from w_user where uid = ? ";
+        return DBHelper.query(sql,new BeanHandler<>(User.class),uid);
+    }
 }

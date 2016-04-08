@@ -20,6 +20,11 @@
 
         <form class="form-horizontal" id="regForm">
             <div class="control-group">
+                <div class="controls">
+                    <span id="errorMsg"></span>
+                </div>
+            </div>
+            <div class="control-group">
                 <label class="control-label">账号</label>
                 <div class="controls">
                     <input type="text" name="username">
@@ -34,26 +39,25 @@
             <div class="control-group">
                 <label class="control-label">重复密码</label>
                 <div class="controls">
-                    <input type="password" name="repassword">
+                    <input type="password" name="repassword" id="repassword">
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label">电子邮件</label>
                 <div class="controls">
-                    <input type="text" name="email">
+                    <input type="text" name="email" id="email">
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label">验证码</label>
                 <div class="controls">
-                    <input type="text" name="code">
+                    <input type="text" name="code" id="code">
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label"></label>
                     <div class="controls">
                         <a href="javascript:;" id="change"><img src="/patchca.png" id="patchca"></a>
-
                     </div>
             </div>
             <div class="form-actions">
@@ -76,6 +80,7 @@
         });
 
         //点击更换验证码
+        //如何实现输入错误后自动刷新新的验证码
         $("#change").click(function() {
             $("#patchca").attr("src","/patchca.png?XXX=" + new Date().getTime().toString());
         });
@@ -142,9 +147,10 @@
             },
             //当以上验证都通过并且提交时会触发
             submitHandler:function(form) {
-               //form为整个表单元素
+                //form为整个表单元素
                 //Ajax提交 参数为表单输入的帐号密码邮箱
                 //$(form).serialize() 表单元素.serialize(),可以自动拼好表单的键值
+                /*
                 $.post("/reg.do",$(form).serialize())
                         .done(function(result){
                         //提交成功时,会返回一个结果
@@ -169,6 +175,52 @@
                         //提交失败时
                             alert("服务器异常，请稍候再试")
                 });
+                */
+                $.ajax({
+                    url:"/reg.do",
+                    type:"post",
+                    data:$("#regForm").serialize(),
+                    beforeSend:function(){
+                        //$btn.attr("class","fa fa-modx fa-spin");
+                        $btn.text("正在注册中。。。").attr("disabled","disabled");
+                    },
+                    success:function(json){
+                        if(json.state == "error") {
+                            $("#errorMsg").text(json.message);
+                        } else {
+                            window.location.href = "/login.do";
+                        }
+
+                    },
+                    error:function(){
+                        $("#errorMsg").text("服务器异常，请稍后再试。").attr("class","text-error");
+                    },
+                    complete:function(){
+
+                        $btn.text("注册").removeAttr("disabled");
+
+                        //当输入错误，提醒帐号密码错误，当点击帐号和密码框，清空提示
+                        $("#username").click(function(){
+                            $("#errorMsg").text("").removeAttr("class","text-error");
+                        });
+                        $("#password").click(function(){
+                            $("#errorMsg").text("").removeAttr("class","text-error");
+                        });
+                        $("#repassword").click(function(){
+                            $("#errorMsg").text("").removeAttr("class","text-error");
+                        });
+                        $("#email").click(function(){
+                            $("#errorMsg").text("").removeAttr("class","text-error");
+                        });
+
+                        $("#code").click(function(){
+                            $("#errorMsg").text("").removeAttr("class","text-error");
+                        });
+                        $("#patchca").click(function(){
+                            $("#errorMsg").text("").removeAttr("class","text-error");
+                        });
+                    }
+                })
             }
         });
     })
