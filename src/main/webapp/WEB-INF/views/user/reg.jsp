@@ -112,7 +112,7 @@
                 email: {
                     required: true,//必填项
                     email: true,//必须为邮箱格式
-                    remote:"/validate/email.do"
+                    remote:"/validate/email.do?from=regEmail"
                 },
                 code:{
                     required:true,
@@ -138,7 +138,7 @@
                 email: {
                     required: "请输入邮箱",
                     email: "邮箱格式不正确，请重新输入",
-                    remote:"该邮箱已被注册，请重登录"
+                    remote:"该邮箱已被注册，请重新输入"
                 },
                 code:{
                     required:"请输入验证码",
@@ -150,6 +150,7 @@
                 //form为整个表单元素
                 //Ajax提交 参数为表单输入的帐号密码邮箱
                 //$(form).serialize() 表单元素.serialize(),可以自动拼好表单的键值
+                var $btn = $("#regBtn");
                 /*
                 $.post("/reg.do",$(form).serialize())
                         .done(function(result){
@@ -188,7 +189,17 @@
                         if(json.state == "error") {
                             $("#errorMsg").text(json.message);
                         } else {
-                            window.location.href = "/login.do";
+                            $("#regMsg").removeClass("hide");
+                            //.show()显示隐藏
+                            var sec = 3;
+                            setInterval(function(){
+                                sec--;
+                                if(sec == 0){
+                                    window.location.href = "/login.do"
+                                }
+                                $(".sec").text(sec);
+                            },1000);
+
                         }
 
                     },

@@ -25,7 +25,7 @@
                         <a href="#"><i class="fa fa-bell"></i></a>
                     </li>
                     <li>
-                        <a href="setting.html"><i class="fa fa-cog"></i></a>
+                        <a href="/setting.do"><i class="fa fa-cog"></i></a>
                     </li>
                     <li>
                         <a href="/logout.do "><i class="fa fa-sign-out"></i></a>
