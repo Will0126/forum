@@ -16,8 +16,7 @@
         <div class="box-header">
             <span class="title"><i class="fa fa-cog"></i> 基本设置</span>
         </div>
-
-        <form action="" id="emailForm" class="form-horizontal">
+        <form id="emailForm" class="form-horizontal">
             <div class="control-group">
                 <label class="control-label">账号</label>
                 <div class="controls">
@@ -27,44 +26,45 @@
             <div class="control-group">
                 <label class="control-label">电子邮件</label>
                 <div class="controls">
-                    <input type="text" value="${sessionScope.curr_user.email}" name="email">
+                    <input type="text" value="${sessionScope.curr_user.email}" id="email" name="email" placeholder="${sessionScope.curr_user.email}">
+                    <i id="font" class="fa fa-check hide"></i>
+                    &nbsp;&nbsp;&nbsp;<span id="errorEMsg" ></span>
                 </div>
             </div>
             <div class="form-actions">
                 <button type="button" id="emailBtn" class="btn btn-primary">保存</button>
+                &nbsp;&nbsp;&nbsp;<span id="successEMsg"></span>
             </div>
-
         </form>
-
     </div>
-    <!--box end-->
+    <!--email end-->
     <div class="box">
         <div class="box-header">
             <span class="title"><i class="fa fa-key"></i> 密码设置</span>
             <span class="pull-right muted" style="font-size: 12px">如果你不打算更改密码，请留空以下区域</span>
         </div>
 
-        <form action="" class="form-horizontal">
+        <form class="form-horizontal" id="passwordForm">
             <div class="control-group">
                 <label class="control-label">密码</label>
                 <div class="controls">
-                    <input type="text">
+                    <input type="password" name="=password" id="=password">
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label">重复密码</label>
                 <div class="controls">
-                    <input type="text">
+                    <input type="password" name="repassword">
                 </div>
             </div>
             <div class="form-actions">
-                <button class="btn btn-primary">保存</button>
+                <button type="button" id="passwordBtn" class="btn btn-primary">保存</button>
             </div>
 
         </form>
 
     </div>
-    <!--box end-->
+    <!--password end-->
 
     <div class="box">
         <div class="box-header">
@@ -100,6 +100,7 @@
 <script src="/static/js/jquery.validate.min.js"></script>
 <script>
     $(function(){
+        //修改邮箱
         $("#emailBtn").click(function(){
             $("#emailForm").submit();
         });
@@ -120,9 +121,71 @@
                     remote:"邮箱已被占有，请重新输入"
                 }
             },
-            submitHandler:function(){}
+            submitHandler:function(){
+                var $ebtn = $("#emailBtn");
+                $.ajax({
+                    url:"/editUser.do",
+                    type:"post",
+                    data:$("#email").serialize(),
+                    beforeSend:function(){
+                        $ebtn.attr("disabled","disabled").text("设置中。。。");
+                    },
+                    success:function(json){
+                        if(json.state == "error"){
+                            $("#errorEMsg").text(json.message).attr("class","text-error");
+                        } else {
+                            $("#successEMsg").text("设置成功").attr("class","text-success");
+                            $("#font").show();
+                        }
+                    },
+                    error:function(){
+                        $("#errorEMsg").text("服务器忙，请稍候再试").attr("class","text-error");
+                    },
+                    complete:function(){
+                        $ebtn.removeAttr("disabled","disabled").text("保存");
+                        setTimeout(function(){
+                            //.fadeOut(1000);淡入淡出
+                            $("#errorEMsg").removeAttr("class","text-error").text("").fadeOut(1000);
+                            $("#successEMsg").removeAttr("class","text-success").text("").fadeOut(1000);
+                            $("#font").fadeOut(1000);
+                        },5000);
+
+                    }
+                })
+            }
+        });
+        //修改邮箱 end
+
+        //修改密码
+        $("#passwordBtn").click(function(){
+           $("#passwordForm").submit();
         });
 
+        $("#passwordForm").validate({
+            errorClass:"text-error",
+            errorElement:"span",
+            rules:{
+                password:{
+                    required:true,
+                    ranglenth:[6,18]
+                },
+                repassword:{
+                    required:true,
+                    equalTo:'#password'
+                }
+            },
+            messages:{
+                password:{
+                    required:"请输入密码",
+                    ranglenth:"密码长度限制6~18位"
+                },
+                repassword:{
+                    required:"请再次输入密码",
+                    equalTo:"两次密码不一致，请重新输入"
+                }
+            },
+            submitHandler:{}
+        });
     })
 </script>
 </body>

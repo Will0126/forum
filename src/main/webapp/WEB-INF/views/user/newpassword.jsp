@@ -17,11 +17,6 @@
             <span class="title"><i class="fa fa-fire"></i> 设置新密码</span>
         </div>
         <form action="" class="form-horizontal" id="passwordForm">
-            <div class="control-group">
-                <div class="controls">
-                    <span id="errorMsg"></span>
-                </div>
-            </div>
             <input type="hidden" name="token" value="${token}">
             <div class="control-group">
                 <label class="control-label">新密码</label>
@@ -38,8 +33,8 @@
 
             <div class="form-actions">
                 <button type="button" class="btn btn-primary" id="setBtn">设置新密码</button>
+                <span id="errorMsg" class="text-error hide">服务器异常，请稍后再试</span>
             </div>
-
         </form>
     </div>
     <!--box end-->
@@ -98,7 +93,9 @@
                     },
                     complete:function(){
                         $btn.text("设置").removeAttr("disabled");
+                        $("#errorMsg").show().fadeOut(5000);
 
+                        /*
                         //当输入错误，提醒帐号密码错误，当点击帐号和密码框，清空提示
                         $("#username").click(function(){
                             $("#errorMsg").text("").removeAttr("class","text-error");
@@ -106,9 +103,8 @@
                         $("#password").click(function(){
                             $("#errorMsg").text("").removeAttr("class","text-error");
                         });
+                        */
                     }
-
-
                 });
             }
         });

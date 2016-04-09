@@ -8,6 +8,7 @@ import com.kaishengit.exception.ServiceException;
 import com.kaishengit.util.ConfigProp;
 import com.kaishengit.util.EmailUtil;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -172,6 +173,16 @@ public class UserService {
             //修改完成，删除找回密码记录
             //这里使用token删除，没使用uid删除
             forgetPasswordDao.deleteForgetPassword(token);
+        }
+    }
+
+    /**
+     * 设置功能----修改用户信息
+     * @param user
+     */
+    public void updateUser(User user) {
+        if(user != null){
+            userDao.updata(user);
         }
     }
 }

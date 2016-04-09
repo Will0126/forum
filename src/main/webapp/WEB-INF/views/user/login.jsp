@@ -27,11 +27,7 @@
         </c:choose>
 
         <form action="" class="form-horizontal" id="loginForm">
-            <div class="control-group">
-                <div class="controls">
-                    <span id="errorMsg"></span>
-                </div>
-            </div>
+
             <div class="control-group">
                 <label class="control-label">账号</label>
                 <div class="controls">
@@ -54,6 +50,7 @@
 
             <div class="form-actions">
                 <button type="button" class="btn btn-primary" id="loginBtn">登录</button>
+                <span id="errorMsg" class="text-error hide">账号或密码输入错误，请重新输入</span>
                 <a class="pull-right" href="/reg.do">注册账号</a>
             </div>
 
@@ -97,30 +94,20 @@
                    data:$(form).serialize(),
                    beforeSend:function(){
                        //$btn.attr("class","fa fa-modx fa-spin");
-                         $btn.text("登录中。。。").attr("disabled","disabled");
+                       $btn.text("登录中。。。").attr("disabled","disabled");
                    },
                    success:function(json){
                         if(json.state == "error") {
                             $("#errorMsg").text(json.message);
                         } else {
+                            $("#errorMsg").show();
                             window.location.href = "/index.do";
                         }
-
                    },
-                   error:function(){
-                       $("#errorMsg").text("账号或密码输入错误，请重新输入。").attr("class","text-error");
-                   },
+                   error:function(){},
                    complete:function(){
-
+                       $("#errorMsg").show().fadeOut(5000);
                        $btn.text("登录").removeAttr("disabled");
-
-                       //当输入错误，提醒帐号密码错误，当点击帐号和密码框，清空提示
-                       $("#username").click(function(){
-                           $("#errorMsg").text("").removeAttr("class","text-error");
-                       });
-                       $("#password").click(function(){
-                           $("#errorMsg").text("").removeAttr("class","text-error");
-                       });
                    }
                })
            }

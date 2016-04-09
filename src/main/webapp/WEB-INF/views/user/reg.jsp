@@ -20,11 +20,6 @@
 
         <form class="form-horizontal" id="regForm">
             <div class="control-group">
-                <div class="controls">
-                    <span id="errorMsg"></span>
-                </div>
-            </div>
-            <div class="control-group">
                 <label class="control-label">账号</label>
                 <div class="controls">
                     <input type="text" name="username">
@@ -63,6 +58,7 @@
             <div class="form-actions">
                 <button type="button" id="regBtn" class="btn btn-primary">注册</button>
                 <span id="regMsg" class="hide">注册成功，<span class="sec">3</span>秒后自动跳转到登录页面</span>
+                <span id="errorMsg" class="text-error hide">服务器异常，请稍后再试</span>
                 <a class="pull-right" href="/login.do">登录</a>
             </div>
         </form>
@@ -203,13 +199,11 @@
                         }
 
                     },
-                    error:function(){
-                        $("#errorMsg").text("服务器异常，请稍后再试。").attr("class","text-error");
-                    },
+                    error:function(){},
                     complete:function(){
-
                         $btn.text("注册").removeAttr("disabled");
-
+                        $("#errorMsg").show().fadeOut(5000);
+                        /*
                         //当输入错误，提醒帐号密码错误，当点击帐号和密码框，清空提示
                         $("#username").click(function(){
                             $("#errorMsg").text("").removeAttr("class","text-error");
@@ -230,6 +224,7 @@
                         $("#patchca").click(function(){
                             $("#errorMsg").text("").removeAttr("class","text-error");
                         });
+                        */
                     }
                 })
             }
