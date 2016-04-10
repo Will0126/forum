@@ -127,14 +127,14 @@
                     remote:"邮箱已被占有，请重新输入"
                 }
             },
-            submitHandler:function(){
+            submitHandler:function(form){
                 var $ebtn = $("#emailBtn");
                 $.ajax({
                     url:"/user/editUser.do",
                     type:"post",
-                    data:$("#emailForm").serialize(),
+                    data:$(form).serialize(),
                     beforeSend:function(){
-                        $ebtn.attr("disabled","disabled").text("设置中。。。");
+                        $ebtn.attr("disabled","disabled").text("设置中...");
                     },
                     success:function(json){
                         if(json.state == "error"){
@@ -184,14 +184,14 @@
                     equalTo:"两次密码不一致，请重新输入"
                 }
             },
-            submitHandler:function(){
+            submitHandler:function(form){
                 var $ebtn = $("#passwordBtn");
                 $.ajax({
                     url:"/user/editUser.do",
                     type:"post",
-                    data:$("#passwordForm").serialize(),
+                    data:$(form).serialize(),
                     beforeSend:function(){
-                        $ebtn.attr("disabled","disabled").text("设置中。。。");
+                        $ebtn.attr("disabled","disabled").text("设置中...");
                     },
                     success:function(json){
                         if(json.state == "error"){
@@ -230,10 +230,13 @@
             formData:{"token":"${token}"},
             fileNumLimit:1//限制一次只能一个，队列中只能有一个
         });
-
-
+        //开始上传
+        uploader.on("uploadProgress",function(file){
+            $(".webuploader-pick").attr("disabled","disabled").text("上传中。。。");
+        });
+        //上传成功
         uploader.on("uploadSuccess",function(file,result){
-            //result 返回的json
+            //result 由七牛云返回的json
             var key = result.key;
             $.post("/user/editUser.do",{"key": key}).done(function(json){
                 if(json.state == "success"){
@@ -243,9 +246,18 @@
                     uploader.removeFile(file,true);//清空队列
                 }
             }).fail(function(){
-                $("#pngEMsg").show().fadeOut(3000);
+                $("#pngEMsg").show().fadeOut(3000).text(json.message);
             });
-        })
+        });
+        //上传失败
+        uploader.on(file,function(){
+            $("#pngEMsg").show().fadeOut(3000);
+        });
+        //上传后，无论成功失败
+        uploader.on(file,function(){
+            $(".webuploader-pick").removeAttr("disabled","disabled").text("上传新头像");
+        });
+
     })
 </script>
 </body>

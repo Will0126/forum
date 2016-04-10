@@ -97,17 +97,17 @@
                    data:$(form).serialize(),
                    beforeSend:function(){
                        //$btn.attr("class","fa fa-modx fa-spin");
-                       $btn.text("登录中。。。").attr("disabled","disabled");
+                       $btn.text("登录中...").attr("disabled","disabled");
                    },
                    success:function(json){
                         if(json.state == "error") {
-                            $("#errorMsg").text(json.message).show().fadeOut(8000);
+                            $("#errorMsg").text(json.message).show().fadeOut(5000);
                         } else {
                             window.location.href ="${not empty param.redirecturl ? param.redirecturl : '/index.do'}";
                         }
                    },
                    error:function(){
-                       $("#errorMsg").show().fadeOut(8000);
+                       $("#errorMsg").show().fadeOut(5000);
                    },
                    complete:function(){
                        $btn.text("登录").removeAttr("disabled");

@@ -179,11 +179,11 @@
                     data:$("#regForm").serialize(),
                     beforeSend:function(){
                         //$btn.attr("class","fa fa-modx fa-spin");
-                        $btn.text("正在注册中。。。").attr("disabled","disabled");
+                        $btn.text("正在注册中...").attr("disabled","disabled");
                     },
                     success:function(json){
                         if(json.state == "error") {
-                            $("#errorMsg").text(json.message);
+                            $("#errorMsg").text(json.message).show().fadeOut(5000);
                         } else {
                             $("#regMsg").removeClass("hide");
                             //.show()显示隐藏

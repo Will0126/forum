@@ -43,11 +43,7 @@
     $(function(){
         $("#forgetBtn").click(function(){
             $("#forgetForm").submit();
-            //一定要再写一个点击提交时，按钮无法再点击功能
-            $("#forgetBtn").attr("disabled","disabled");
-            setTimeout(function(){
-                $("#forgetBtn").removeAttr("disabled","disabled");
-            },8000)
+
         });
         $("#forgetForm").validate({
             errorClass:'text-error',

@@ -78,7 +78,7 @@
                     type:"post",
                     data:$(form).serialize(),
                     beforeSend:function(){
-                        $btn.text("设置中。。。").attr("disabled","disabled");
+                        $btn.text("设置中...").attr("disabled","disabled");
                     },
                     success:function(json){
                         if(json.state == "error") {
