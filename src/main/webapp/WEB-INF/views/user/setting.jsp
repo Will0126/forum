@@ -27,13 +27,13 @@
                 <label class="control-label">电子邮件</label>
                 <div class="controls">
                     <input type="text" value="${sessionScope.curr_user.email}" id="email" name="email" placeholder="${sessionScope.curr_user.email}">
-                    <i id="font" class="fa fa-check hide"></i>
-                    &nbsp;&nbsp;&nbsp;<span id="errorEMsg" ></span>
                 </div>
             </div>
             <div class="form-actions">
                 <button type="button" id="emailBtn" class="btn btn-primary">保存</button>
-                &nbsp;&nbsp;&nbsp;<span id="successEMsg"></span>
+                <span id="emailEMsg" class="text-error hide">服务器忙，请稍候再试</span>
+                <span id="emailSMsg" class="text-success hide">设置成功</span>
+
             </div>
         </form>
     </div>
@@ -48,7 +48,7 @@
             <div class="control-group">
                 <label class="control-label">密码</label>
                 <div class="controls">
-                    <input type="password" name="=password" id="=password">
+                    <input type="password" name="password" id="password">
                 </div>
             </div>
             <div class="control-group">
@@ -59,6 +59,8 @@
             </div>
             <div class="form-actions">
                 <button type="button" id="passwordBtn" class="btn btn-primary">保存</button>
+                <span id="passwordEMsg" class="text-error hide">服务器忙，请稍候再试</span>
+                <span id="passwordSMsg" class="text-success hide">设置成功</span>
             </div>
 
         </form>
@@ -86,7 +88,10 @@
             </ul>
             <div class="form-actions">
                 <button class="btn btn-primary">上传新头像</button>
+                <span id="pngEMsg" class="text-error hide">服务器忙，请稍候再试</span>
+                <span id="pngSMsg" class="text-success hide">设置成功</span>
             </div>
+
 
             <%--内存地址，查询出来的new出来的和存储到session的user指的同一片内存空间，一旦修改查询的user，session空间内的会自动修改--%>
         </form>
@@ -126,34 +131,29 @@
                 $.ajax({
                     url:"/editUser.do",
                     type:"post",
-                    data:$("#email").serialize(),
+                    data:$("#emailForm").serialize(),
                     beforeSend:function(){
                         $ebtn.attr("disabled","disabled").text("设置中。。。");
                     },
                     success:function(json){
                         if(json.state == "error"){
-                            $("#errorEMsg").text(json.message).attr("class","text-error");
+                            $("#emailEMsg").text(json.message).show().fadeOut(8000);
                         } else {
-                            $("#successEMsg").text("设置成功").attr("class","text-success");
-                            $("#font").show();
+                            $("#emailSMsg").show().fadeOut(8000);
+                            $("#font").show().fadeOut(8000);
                         }
                     },
                     error:function(){
-                        $("#errorEMsg").text("服务器忙，请稍候再试").attr("class","text-error");
+                        $("#emailEMsg").show().fadeOut(8000);
                     },
                     complete:function(){
                         $ebtn.removeAttr("disabled","disabled").text("保存");
-                        setTimeout(function(){
-                            //.fadeOut(1000);淡入淡出
-                            $("#errorEMsg").removeAttr("class","text-error").text("").fadeOut(1000);
-                            $("#successEMsg").removeAttr("class","text-success").text("").fadeOut(1000);
-                            $("#font").fadeOut(1000);
-                        },5000);
-
                     }
                 })
             }
         });
+
+
         //修改邮箱 end
 
         //修改密码
@@ -166,12 +166,12 @@
             errorElement:"span",
             rules:{
                 password:{
-                    required:true,
-                    ranglenth:[6,18]
+                    required: true,//必填项
+                    rangelength: [6, 18]//密码长度6-18位
                 },
                 repassword:{
-                    required:true,
-                    equalTo:'#password'
+                    required: true,//必填项
+                    equalTo: '#password'//要求与上面密码一致
                 }
             },
             messages:{
@@ -184,8 +184,39 @@
                     equalTo:"两次密码不一致，请重新输入"
                 }
             },
-            submitHandler:{}
+            submitHandler:function(){
+                var $ebtn = $("#passwordBtn");
+                $.ajax({
+                    url:"/editUser.do",
+                    type:"post",
+                    data:$("#passwordForm").serialize(),
+                    beforeSend:function(){
+                        $ebtn.attr("disabled","disabled").text("设置中。。。");
+                    },
+                    success:function(json){
+                        if(json.state == "error"){
+                            $("#passwordEMsg").text(json.message).show().fadeOut(8000);
+                        } else {
+                            $("#passwordSMsg").text("设置成功，请重新登录").show();
+                            $("#font").show();
+                            setTimeout(function(){
+                                window.location.href="/login.do?redirecturl=/setting.do";
+                            },3000);
+                        }
+                    },
+                    error:function(){
+                        $("#emailMsg").show().fadeOut(8000);
+                    },
+                    complete:function(){
+                        $ebtn.removeAttr("disabled","disabled").text("保存");
+                    }
+                })
+            }
         });
+        //修改密码  end
+
+        //上传/修改头像
+
     })
 </script>
 </body>

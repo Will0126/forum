@@ -98,15 +98,15 @@
                    },
                    success:function(json){
                         if(json.state == "error") {
-                            $("#errorMsg").text(json.message);
+                            $("#errorMsg").text(json.message).show().fadeOut(8000);
                         } else {
-                            $("#errorMsg").show();
                             window.location.href = "/index.do";
                         }
                    },
-                   error:function(){},
+                   error:function(){
+                       $("#errorMsg").show().fadeOut(8000);
+                   },
                    complete:function(){
-                       $("#errorMsg").show().fadeOut(5000);
                        $btn.text("登录").removeAttr("disabled");
                    }
                })
