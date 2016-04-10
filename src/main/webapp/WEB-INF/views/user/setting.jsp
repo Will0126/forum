@@ -8,6 +8,7 @@
     <link href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="//cdn.bootcss.com/bootstrap/2.3.1/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/js/webuploader/webuploader.css">
 </head>
 <body>
 <%@include file="../include/nav.jsp"%>
@@ -67,7 +68,6 @@
 
     </div>
     <!--password end-->
-
     <div class="box">
         <div class="box-header">
             <span class="title"><i class="fa fa-user"></i> 头像设置</span>
@@ -77,7 +77,7 @@
             <div class="control-group">
                 <label class="control-label">当前头像</label>
                 <div class="controls">
-                    <img src="${sessionScope.curr_user.avatar}?imageView2/1/w/40/h/40" class="img-circle" alt="">
+                    <img src="${sessionScope.curr_user.avatar}?imageView2/1/w/40/h/40" class="img-circle avatar2" alt="">
                 </div>
             </div>
             <hr>
@@ -87,7 +87,7 @@
                 <li>如果你是男的，请不要用女人的照片作为头像，这样可能会对其他会员产生误导</li>
             </ul>
             <div class="form-actions">
-                <button class="btn btn-primary">上传新头像</button>
+                <div id="picker">上传新头像</div>
                 <span id="pngEMsg" class="text-error hide">服务器忙，请稍候再试</span>
                 <span id="pngSMsg" class="text-success hide">设置成功</span>
             </div>
@@ -103,6 +103,7 @@
 <!--container end-->
 <script src="/static/js/jquery-1.11.3.min.js"></script>
 <script src="/static/js/jquery.validate.min.js"></script>
+<script src="/static/js/webuploader/webuploader.min.js"></script>
 <script>
     $(function(){
         //修改邮箱
@@ -129,7 +130,7 @@
             submitHandler:function(){
                 var $ebtn = $("#emailBtn");
                 $.ajax({
-                    url:"/editUser.do",
+                    url:"/user/editUser.do",
                     type:"post",
                     data:$("#emailForm").serialize(),
                     beforeSend:function(){
@@ -152,7 +153,6 @@
                 })
             }
         });
-
 
         //修改邮箱 end
 
@@ -187,7 +187,7 @@
             submitHandler:function(){
                 var $ebtn = $("#passwordBtn");
                 $.ajax({
-                    url:"/editUser.do",
+                    url:"/user/editUser.do",
                     type:"post",
                     data:$("#passwordForm").serialize(),
                     beforeSend:function(){
@@ -197,11 +197,11 @@
                         if(json.state == "error"){
                             $("#passwordEMsg").text(json.message).show().fadeOut(8000);
                         } else {
-                            $("#passwordSMsg").text("设置成功，请重新登录").show();
+                            $("#passwordSMsg").text("设置成功，请重新登录").show().fadeOut(3000,function(){
+                                    window.location.href="/logout.do?redirecturl=/user/setting.do&ds=1"
+                            });
                             $("#font").show();
-                            setTimeout(function(){
-                                window.location.href="/login.do?redirecturl=/setting.do";
-                            },3000);
+
                         }
                     },
                     error:function(){
@@ -216,7 +216,36 @@
         //修改密码  end
 
         //上传/修改头像
+        var uploader = WebUploader.create({
+            swf:'/static/js/webuploder/Uploader.swf',
+            server:"http://upload.qiniu.com",//服务器地址
+            pick:"#picker",//哪个按钮作为上传
+            accept: {
+                title: 'Images',
+                extensions: 'gif,jpg,jpeg,bmp,png',
+                mimeTypes: 'image/*'
+            },
+            auto:true,//自动上传
+            fileVal:"file",//发送给服务器的file的名字
+            formData:{"token":"${token}"},
+            fileNumLimit:1//限制一次只能一个，队列中只能有一个
+        });
 
+
+        uploader.on("uploadSuccess",function(file,result){
+            //result 返回的json
+            var key = result.key;
+            $.post("/user/editUser.do",{"key": key}).done(function(json){
+                if(json.state == "success"){
+                    $(".avatar1").attr("src",json.data +"?imageView2/1/w/20/h/20");
+                    $(".avatar2").attr("src",json.data +"?imageView2/1/w/40/h/40");
+                    $("#pngSMsg").show().fadeOut(3000);
+                    uploader.removeFile(file,true);//清空队列
+                }
+            }).fail(function(){
+                $("#pngEMsg").show().fadeOut(3000);
+            });
+        })
     })
 </script>
 </body>

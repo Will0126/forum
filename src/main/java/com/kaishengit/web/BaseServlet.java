@@ -1,6 +1,7 @@
 package com.kaishengit.web;
 
 import com.google.gson.Gson;
+import com.kaishengit.entity.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,7 +17,7 @@ import java.io.PrintWriter;
 public class BaseServlet extends HttpServlet {
 
     public void forward(HttpServletRequest request, HttpServletResponse response, String viewsName) throws ServletException, IOException {
-        request.getRequestDispatcher("WEB-INF/views/" + viewsName + ".jsp").forward(request,response);
+        request.getRequestDispatcher("/WEB-INF/views/" + viewsName + ".jsp").forward(request,response);
     }
 
      public void rendJson(HttpServletResponse response, Object result) throws IOException {
@@ -44,6 +45,15 @@ public class BaseServlet extends HttpServlet {
             ip = "127.0.0.1";
         }
         return ip;
+    }
+
+    public boolean isAjaxRequest(HttpServletRequest request) {
+        //判断是否为Ajax请求
+        return "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+    }
+
+    public User getLoginUser(HttpServletRequest request) {
+        return (User) request.getSession().getAttribute("curr_user");
     }
 
 }

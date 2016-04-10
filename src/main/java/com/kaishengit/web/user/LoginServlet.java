@@ -19,6 +19,10 @@ public class LoginServlet extends BaseServlet{
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //修改密码后，自动过期session，重新登录，即可返回setting
+        if("1".equals(req.getParameter("de"))){
+            req.getSession().invalidate();
+        }
         forward(req,resp,"user/login");
     }
 

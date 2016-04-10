@@ -18,6 +18,9 @@
         </div>
 
         <c:choose>
+            <c:when test="${param.state == '1001'}">
+                <div class="alert alert-error">请登录后再继续操作</div>
+            </c:when>
             <c:when test="${param.state == '1002'}">
                 <div class="alert alert-success">您已安全退出</div>
             </c:when>
@@ -100,7 +103,7 @@
                         if(json.state == "error") {
                             $("#errorMsg").text(json.message).show().fadeOut(8000);
                         } else {
-                            window.location.href = "/index.do";
+                            window.location.href ="${not empty param.redirecturl ? param.redirecturl : '/index.do'}";
                         }
                    },
                    error:function(){

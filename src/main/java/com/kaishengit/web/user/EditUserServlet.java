@@ -17,15 +17,20 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
-@WebServlet("/editUser.do")
+/**
+ * 用户的邮箱和密码修改
+ */
+@WebServlet("/user/editUser.do")
 public class EditUserServlet extends BaseServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if(isAjaxRequest(request)) {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
+        String avatar = request.getParameter("key");
 
         //这里将session内的值赋值给User，因为是引用数据类型，所以当user的值修改时，session空间内的值会自动修改
-        User user = (User) request.getSession().getAttribute("curr_user");
-        UserService userService = new UserService();
+        User user = getLoginUser(request);
+        Map<String,Object> result = Maps.newHashMap();
 
         if(StringUtils.isNotEmpty(email)){
             user.setEmail(email);
@@ -35,20 +40,17 @@ public class EditUserServlet extends BaseServlet {
             user.setPassword(DigestUtils.md5Hex(password + ConfigProp.get("user.password.salt")));
         }
 
-        userService.updateUser(user);
-
-        Map<String,Object> result = Maps.newHashMap();
-
+        if(StringUtils.isNotEmpty(avatar)){
+            //方便修改照片路径前缀
+            avatar = ConfigProp.get("qiniu.domain") + avatar;
+            user.setAvatar(avatar);
+            //将头像作为参数，传递回去
+            result.put("data",avatar);
+        }
+        new UserService().updateUser(user);
         result.put("state","success");
-
         rendJson(response,result);
-
-
-
-
+        }
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    }
 }

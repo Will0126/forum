@@ -15,7 +15,7 @@
                     <li>
                         <a href="#">
                             <%--(域名+key)+裁剪--%>
-                            <img src="${sessionScope.curr_user.avatar}?imageView2/1/w/20/h/20" class="img-circle" alt="">
+                            <img src="${sessionScope.curr_user.avatar}?imageView2/1/w/20/h/20" class="img-circle avatar1" alt="">
                         </a>
                     </li>
                     <li>
@@ -25,7 +25,7 @@
                         <a href="#"><i class="fa fa-bell"></i></a>
                     </li>
                     <li>
-                        <a href="/setting.do"><i class="fa fa-cog"></i></a>
+                        <a href="/user/setting.do"><i class="fa fa-cog"></i></a>
                     </li>
                     <li>
                         <a href="/logout.do "><i class="fa fa-sign-out"></i></a>
