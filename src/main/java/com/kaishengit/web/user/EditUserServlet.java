@@ -24,32 +24,33 @@ import java.util.Map;
 public class EditUserServlet extends BaseServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if(isAjaxRequest(request)) {
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String avatar = request.getParameter("key");
+            //修改的流程的post只能有Ajax调用
+            String email = request.getParameter("email");
+            String password = request.getParameter("password");
+            String avatar = request.getParameter("key");
 
-        //这里将session内的值赋值给User，因为是引用数据类型，所以当user的值修改时，session空间内的值会自动修改
-        User user = getLoginUser(request);
-        Map<String,Object> result = Maps.newHashMap();
+            //这里将session内的值赋值给User，因为是引用数据类型，所以当user的值修改时，session空间内的值会自动修改
+            User user = getLoginUser(request);
+            Map<String,Object> result = Maps.newHashMap();
 
-        if(StringUtils.isNotEmpty(email)){
-            user.setEmail(email);
-        }
+            if(StringUtils.isNotEmpty(email)){
+                user.setEmail(email);
+            }
 
-        if(StringUtils.isNotEmpty(password)){
-            user.setPassword(DigestUtils.md5Hex(password + ConfigProp.get("user.password.salt")));
-        }
+            if(StringUtils.isNotEmpty(password)){
+                user.setPassword(DigestUtils.md5Hex(password + ConfigProp.get("user.password.salt")));
+            }
 
-        if(StringUtils.isNotEmpty(avatar)){
-            //方便修改照片路径前缀
-            avatar = ConfigProp.get("qiniu.domain") + avatar;
-            user.setAvatar(avatar);
-            //将头像作为参数，传递回去
-            result.put("data",avatar);
-        }
-        new UserService().updateUser(user);
-        result.put("state","success");
-        rendJson(response,result);
+            if(StringUtils.isNotEmpty(avatar)){
+                //方便修改照片路径前缀
+                avatar = ConfigProp.get("qiniu.domain") + avatar;
+                user.setAvatar(avatar);
+                //将头像作为参数，传递回去
+                result.put("data",avatar);
+            }
+            new UserService().updateUser(user);
+            result.put("state","success");
+            rendJson(response,result);
         }
     }
 

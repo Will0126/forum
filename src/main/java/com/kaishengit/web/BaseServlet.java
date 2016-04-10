@@ -48,7 +48,7 @@ public class BaseServlet extends HttpServlet {
     }
 
     public boolean isAjaxRequest(HttpServletRequest request) {
-        //判断是否为Ajax请求
+        //判断是否为Ajax请求，用来限制setting修改的流程的post只能有Ajax调用
         return "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
     }
 
