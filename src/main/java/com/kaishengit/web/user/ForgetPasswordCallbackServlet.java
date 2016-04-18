@@ -1,5 +1,6 @@
 package com.kaishengit.web.user;
 
+import com.kaishengit.exception.ServiceException;
 import com.kaishengit.service.UserService;
 import com.kaishengit.web.BaseServlet;
 import org.apache.commons.lang3.StringUtils;
@@ -29,7 +30,7 @@ public class ForgetPasswordCallbackServlet extends BaseServlet {
                 request.setAttribute("token",token);
                 forward(request,response,"user/newpassword");
                 //
-            } catch (Exception e) {
+            } catch (ServiceException e) {
                 request.setAttribute("massage",e.getMessage());
                 forward(request,response,"user/tokenerror");
             }

@@ -22,7 +22,9 @@ public class ValidateUserFilter extends AbstractFilter {
         //request.getRequestURI()获取请求路径
         String path = request.getRequestURI();
         //startsWith（XXX）字符串以XXX开头
-        if(path.startsWith("/user/") || path.startsWith("/topic/")){
+        if(path.equals("/topic/view.do")) {
+            filterChain.doFilter(request,response);
+        } else if(path.startsWith("/user/") || path.startsWith("/topic/")){
             //是则判断是否登录
             if(request.getSession().getAttribute("curr_user") == null){
                 //未登录，打回去登录

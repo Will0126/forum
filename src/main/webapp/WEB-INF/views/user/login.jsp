@@ -103,7 +103,9 @@
                         if(json.state == "error") {
                             $("#errorMsg").text(json.message).show().fadeOut(5000);
                         } else {
-                            window.location.href ="${not empty param.redirecturl ? param.redirecturl : '/index.do'}";
+                            //获取锚标记
+                            var hash = window.location.hash | "";
+                            window.location.href ="${not empty param.redirecturl ? param.redirecturl : '/index.do'} " + hash;
                         }
                    },
                    error:function(){

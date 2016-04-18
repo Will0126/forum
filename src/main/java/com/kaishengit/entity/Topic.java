@@ -1,12 +1,16 @@
 package com.kaishengit.entity;
 
-public class Topic {
+import java.io.Serializable;
 
+public class Topic implements Serializable {
+
+    private static final long serialVersionUID = -8609054220588681486L;
+    //实现了序列化接口
     private Integer id;
     private String title;
     private String context;
     private Integer nodeid;
-    private Long createtime;
+    private String createtime;
     private Integer userid;
     private Integer clicknum;
     private Integer favnum;
@@ -58,11 +62,11 @@ public class Topic {
         this.nodeid = nodeid;
     }
 
-    public Long getCreatetime() {
+    public String getCreatetime() {
         return createtime;
     }
 
-    public void setCreatetime(Long createtime) {
+    public void setCreatetime(String createtime) {
         this.createtime = createtime;
     }
 

@@ -14,7 +14,6 @@ public class ForgetPasswordDao {
     public ForgetPassword findByToken(String token) {
         String sql = "select * from w_forgetpassword where token = ?";
         return DBHelper.query(sql,new BeanHandler<ForgetPassword>(ForgetPassword.class),token);
-
     }
 
     public void deleteForgetPassword(String token) {

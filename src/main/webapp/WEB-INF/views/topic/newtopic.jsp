@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/static/js/editer/styles/simditor.css">
 </head>
 <body>
-<%@include file="../include/nav.jsp"%>
+<%@ include file="../include/nav.jsp"%>
 <!--header-bar end-->
 <div class="container">
     <div class="box">
@@ -95,10 +95,7 @@
                     },
                     success:function(json){
                         if(json.state == "success"){
-                            console.log(json.state);
-                            window.location.href="/topic/topic.do?id="+json.data;
-                        } else {
-                            $("#EMsg").show().fadeOut(5000).text(json.message);
+                            window.location.href = "/topic/view.do?id="+json.data;
                         }
                     },
                     error:function(){
@@ -109,15 +106,6 @@
                     }
                 });
             }
-
-
-
-
-
-
-
-
-
         });
 
 

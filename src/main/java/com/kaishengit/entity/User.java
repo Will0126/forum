@@ -1,9 +1,13 @@
 package com.kaishengit.entity;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
+    private static final long serialVersionUID = 399122413338589330L;
 
     public static final String USER_STATE_NORMAL = "正常";
     public static final String USER_STATE_DISABLE = "禁用";
+
 
     private Integer id;
     private String username;

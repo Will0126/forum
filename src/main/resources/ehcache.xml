@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache>
+    <ehcache>
+        <diskStore path="java.io.tmpdir"/>
+        <!--磁盘存储位置，当内存不足时存储到磁盘的位置-->
+        <defaultCache
+                maxElementsInMemory="10000"
+                eternal="false"
+                timeToIdleSeconds="120"
+                timeToLiveSeconds="120"
+                overflowToDisk="true"
+        />
+
+        <!--maxElementsInMemory内存中最大数量-->
+        <!--eternal如果为true 导致下面两个时间设置无效，仅当数据为恒定时，设置为true-->
+        <!--timeToIdleSeconds闲置时间 （最后访问时间-当前时间），闲置多少秒，然后清除-->
+        <!--timeToLiveSeconds存活时间（当前时间-创建时间）-->
+        <!--闲置时间要小于等于存活时间-->
+        <!--overflowToDisk内存不够是否写入磁盘-->
+        <!--cache为模版  name是模版名-->
+        <cache name="simpleCache"
+               maxElementsInMemory="1000"
+               eternal="false"
+               timeToIdleSeconds="30"
+               timeToLiveSeconds="30"
+               overflowToDisk="true"/>
+
+    </ehcache>
+</ehcache>

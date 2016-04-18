@@ -12,6 +12,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 
@@ -19,6 +21,8 @@ public class UserService {
 
     private UserDao userDao = new UserDao();
     private ForgetPasswordDao forgetPasswordDao = new ForgetPasswordDao();
+    private static Logger logger = LoggerFactory.getLogger(UserService.class);
+
     /**
      *新增用户
      * @param username
@@ -46,6 +50,7 @@ public class UserService {
         user.setState(user.USER_STATE_NORMAL);
 
         userDao.save(user);
+        logger.info("新注册用户{}",user.getUsername());
 
     }
 
@@ -84,12 +89,15 @@ public class UserService {
                 user.setLoginip(ip);
                 user.setLogintime(DateTime.now().toString("yyyy-MM-dd HH:mm:ss"));
                 userDao.updata(user);
+                logger.info("用户{}登录",user.getUsername());
                 return  user;
             } else if(user.getState().equals(user.USER_STATE_DISABLE)){
                 //帐号禁用
+                logger.info("用户{}被禁用",user.getUsername());
                 throw new ServiceException("该帐号已禁用");
             } else {
                 //帐号未激活
+                logger.info("用户{}未激活",user.getUsername());
                 throw new ServiceException("该帐号未激活");
             }
 
@@ -122,7 +130,7 @@ public class UserService {
             forgetPassword.setCreatetime(DateTime.now().toString("yyyy-MM-dd HH:mm:ss"));
 
             forgetPasswordDao.save(forgetPassword);
-
+            logger.info("用户{}找回密码",user.getUsername());
             EmailUtil.sendHtmlEmail(title,msg,email);
         }
 
@@ -145,7 +153,7 @@ public class UserService {
             DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
             DateTime dateTime = formatter.parseDateTime(creatime);
             //增加30
-            dateTime = dateTime.plusMonths(30);
+            dateTime = dateTime.plusMinutes(30);
 
             if(dateTime.isAfterNow()){
                 //在当前时间之后,有效
@@ -183,6 +191,7 @@ public class UserService {
     public void updateUser(User user) {
         if(user != null){
             userDao.updata(user);
+            logger.info("用户{}修改信息",user.getUsername());
         }
     }
 }

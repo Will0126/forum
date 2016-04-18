@@ -40,7 +40,6 @@
     <!--box end-->
 </div>
 <!--container end-->
-
 <script src="/static/js/jquery-1.11.3.min.js"></script>
 <script src="/static/js/jquery.validate.min.js"></script>
 <script>
